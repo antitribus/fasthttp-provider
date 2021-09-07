@@ -3,7 +3,13 @@
 ## Example:
 
 ```go
-import ...
+package main
+
+import (
+    "context"
+    "github.com/valyala/fasthttp"
+    "time"
+)
 
 var before = new([]func(ctx context.Context) context.Context)
 var after = new([]func(ctx context.Context) context.Context)
