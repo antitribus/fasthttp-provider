@@ -1,2 +1,8 @@
 .vscode
 .idea
+
+# Dependencies
+/vendor/
+vendor/
+vendor
+/Godeps/

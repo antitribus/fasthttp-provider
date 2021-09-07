@@ -3,7 +3,6 @@ package fasthttp_provider
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/valyala/fasthttp"
 	"time"
 )
@@ -14,9 +13,9 @@ type FastHTTPProvider struct {
 	afterRequest  *[]func(ctx context.Context) context.Context
 }
 
-func (hhc *FastHTTPProvider) Request(ctx context.Context, request *fasthttp.Request, duration *time.Duration) (*fasthttp.Response, error) {
-	if hhc.beforeRequest != nil {
-		for _, br := range *hhc.beforeRequest {
+func (fhp *FastHTTPProvider) Request(ctx context.Context, request *fasthttp.Request, duration *time.Duration) (*fasthttp.Response, error) {
+	if fhp.beforeRequest != nil {
+		for _, br := range *fhp.beforeRequest {
 			br(ctx)
 		}
 	}
@@ -25,41 +24,36 @@ func (hhc *FastHTTPProvider) Request(ctx context.Context, request *fasthttp.Requ
 	response := fasthttp.AcquireResponse()
 
 	if duration != nil && *duration > 0 {
-		err = hhc.client.DoTimeout(request, response, *duration)
+		err = fhp.client.DoTimeout(request, response, *duration)
 	} else {
-		err = hhc.client.Do(request, response)
+		err = fhp.client.Do(request, response)
 	}
 
 	defer fasthttp.ReleaseRequest(request)
 
-	if hhc.afterRequest != nil {
-		for _, ar := range *hhc.afterRequest {
-			defer ar(ctx)
+	if fhp.afterRequest != nil {
+		for _, ar := range *fhp.afterRequest {
+			ar(ctx)
 		}
 	}
 
 	return response, err
 }
 
-func (hhc *FastHTTPProvider) Do(ctx context.Context, request *fasthttp.Request) (*fasthttp.Response, error) {
-	return hhc.Request(ctx, request, nil)
+func (fhp *FastHTTPProvider) Do(ctx context.Context, request *fasthttp.Request) (*fasthttp.Response, error) {
+	return fhp.Request(ctx, request, nil)
 }
 
-func (hhc *FastHTTPProvider) DoTimeout(ctx context.Context, request *fasthttp.Request, duration *time.Duration) (*fasthttp.Response, error) {
-	return hhc.Request(ctx, request, duration)
+func (fhp *FastHTTPProvider) DoTimeout(ctx context.Context, request *fasthttp.Request, duration *time.Duration) (*fasthttp.Response, error) {
+	return fhp.Request(ctx, request, duration)
 }
 
-func (hhc *FastHTTPProvider) MarshalResponse(ctx context.Context, response *fasthttp.Response, resp interface{}) error {
-	err := json.Unmarshal(response.Body(), &resp)
-	return err
-}
+func (fhp *FastHTTPProvider) JSON(ctx context.Context, request *fasthttp.Request, response interface{}, duration *time.Duration) (*fasthttp.Response, error) {
+	result, err := fhp.Request(ctx, request, duration)
 
-func (hhc *FastHTTPProvider) OnRequestError(ctx context.Context, err error) error {
-	fmt.Println("on-request-error", err.Error())
-	return err
-}
+	if err == nil {
+		_ = json.Unmarshal(result.Body(), &response)
+	}
 
-func (hhc *FastHTTPProvider) OnMarshalResponseError(ctx context.Context, err error) error {
-	fmt.Println("on-marshal-error", err.Error())
-	return err
+	return result, err
 }
