@@ -8,14 +8,14 @@ import (
 )
 
 type FastHTTPProvider struct {
-	client        *fasthttp.Client
-	beforeRequest *[]func(ctx context.Context) context.Context
-	afterRequest  *[]func(ctx context.Context) context.Context
+	Client        *fasthttp.Client
+	BeforeRequest *[]func(ctx context.Context) context.Context
+	AfterRequest  *[]func(ctx context.Context) context.Context
 }
 
 func (fhp *FastHTTPProvider) Request(ctx context.Context, request *fasthttp.Request, duration *time.Duration) (*fasthttp.Response, error) {
-	if fhp.beforeRequest != nil {
-		for _, br := range *fhp.beforeRequest {
+	if fhp.BeforeRequest != nil {
+		for _, br := range *fhp.BeforeRequest {
 			br(ctx)
 		}
 	}
@@ -24,15 +24,15 @@ func (fhp *FastHTTPProvider) Request(ctx context.Context, request *fasthttp.Requ
 	response := fasthttp.AcquireResponse()
 
 	if duration != nil && *duration > 0 {
-		err = fhp.client.DoTimeout(request, response, *duration)
+		err = fhp.Client.DoTimeout(request, response, *duration)
 	} else {
-		err = fhp.client.Do(request, response)
+		err = fhp.Client.Do(request, response)
 	}
 
 	defer fasthttp.ReleaseRequest(request)
 
-	if fhp.afterRequest != nil {
-		for _, ar := range *fhp.afterRequest {
+	if fhp.AfterRequest != nil {
+		for _, ar := range *fhp.AfterRequest {
 			ar(ctx)
 		}
 	}

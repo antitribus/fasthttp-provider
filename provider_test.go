@@ -18,14 +18,14 @@ var showMessage = func(s string) func(c context.Context) context.Context {
 }
 
 var fhp = FastHTTPProvider{
-	client: &fasthttp.Client{MaxConnsPerHost: 300,
+	Client: &fasthttp.Client{MaxConnsPerHost: 300,
 		MaxConnDuration:     60 * time.Second,
 		MaxIdleConnDuration: 1 * time.Second,
 		WriteTimeout:        1 * time.Second,
 		ReadTimeout:         1 * time.Second,
 	},
-	beforeRequest: before,
-	afterRequest:  after,
+	BeforeRequest: before,
+	AfterRequest:  after,
 }
 
 var duration = time.Millisecond * 1000
