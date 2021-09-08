@@ -1,4 +1,4 @@
-module fasthttp-provider
+module github.com/antitribus/fasthttp-provider
 
 go 1.15
 
