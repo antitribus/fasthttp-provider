@@ -7,7 +7,7 @@ import (
 )
 
 type HyperHTTP interface {
-	Do(ctx context.Context, request *fasthttp.Request) (response *fasthttp.Response, err error)
-	DoTimeout(ctx context.Context, request *fasthttp.Request, duration time.Duration) (response *fasthttp.Response, err error)
-	JSON(ctx context.Context, request *fasthttp.Request, response interface{}, duration time.Duration)
+	Do(ctx context.Context, request *fasthttp.Request) (*fasthttp.Response, error)
+	DoTimeout(ctx context.Context, request *fasthttp.Request, duration time.Duration) (*fasthttp.Response, error)
+	JSON(ctx context.Context, request *fasthttp.Request, response interface{}, duration time.Duration) (*fasthttp.Response, error)
 }
