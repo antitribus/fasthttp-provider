@@ -10,8 +10,8 @@ import (
 // FastHTTPProvider struct containing the client and attributes for performing functions before and after the request
 type FastHTTPProvider struct {
 	Client        *fasthttp.Client
-	BeforeRequest *[]func(ctx context.Context) context.Context
-	AfterRequest  *[]func(ctx context.Context) context.Context
+	BeforeRequest *[]func(ctx context.Context)
+	AfterRequest  *[]func(ctx context.Context)
 }
 
 func (fhp *FastHTTPProvider) request(ctx context.Context, request *fasthttp.Request, duration *time.Duration) (*fasthttp.Response, error) {
