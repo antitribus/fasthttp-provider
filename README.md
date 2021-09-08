@@ -19,13 +19,12 @@ import (
 	"time"
 )
 
-var before = new([]func(ctx context.Context) context.Context)
-var after = new([]func(ctx context.Context) context.Context)
+var before = new([]func(ctx context.Context))
+var after = new([]func(ctx context.Context))
 
-var showMessage = func(s string) func(c context.Context) context.Context {
-	return func(ctx context.Context) context.Context {
+var showMessage = func(s string) func(c context.Context) {
+	return func(ctx context.Context) {
 		println(s)
-		return ctx
 	}
 }
 
