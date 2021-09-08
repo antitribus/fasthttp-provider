@@ -1,5 +1,11 @@
 # fasthttp-provider
 
+## Install
+
+```shell
+go get github.com/antitribus/fasthttp-provider
+```
+
 ## Example:
 
 ```go
