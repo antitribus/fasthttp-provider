@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// HyperHTTP interface
 type HyperHTTP interface {
 	Do(ctx context.Context, request *fasthttp.Request) (*fasthttp.Response, error)
 	DoTimeout(ctx context.Context, request *fasthttp.Request, duration time.Duration) (*fasthttp.Response, error)
